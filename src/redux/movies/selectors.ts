@@ -1,14 +1,14 @@
 import {createSelector} from "reselect";
 
-export const toDosSelector = createSelector(
-    (state: any) => state.toDoReducer.toDos,
-    (toDos) => {
-        return toDos
+export const moviesSelector = createSelector(
+    (state: any) => state.movieReducer.movies,
+    (movies) => {
+        return movies
     }
 );
-export const toDoSelector = createSelector(
-    (state: any) => state.toDoReducer.toDo,
-    (toDo) => {
-        return toDo
+export const movieSelector = createSelector(
+    (state: any) => state.movieReducer.movie,
+    (movie) => {
+        return movie
     }
 );

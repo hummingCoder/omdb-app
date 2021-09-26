@@ -1,23 +1,48 @@
-import {SET_TODO_ITEM, SET_TODOS} from "./constants";
-import {ToDo} from './actions';
+import {SET_MOVIE_ITEM, SET_MOVIES} from "./constants";
+import {Movie, MovieList} from './actions';
 
 const initialState = {
-    toDo: {
-        id: 0,
-        title: "",
-        completed: false,
-        userId: 0
+    movie: {
+        Title: "",
+        Year: "",
+        Rated: "",
+        Released: "",
+        Runtime: "",
+        Genre: "",
+        Director: "",
+        Writer: "",
+        Actors: "",
+        Plot: "",
+        Language: "",
+        Country: "",
+        Awards: "",
+        Poster: "",
+        Ratings: [],
+        Metascore: "",
+        imdbRating: "",
+        imdbVotes: "",
+        imdbID: "",
+        Type: "",
+        DVD: "",
+        BoxOffice: "",
+        Production: "",
+        Website: "",
+        Response: "",
     },
-    toDos: []
+    movies: {
+        Search: [],
+        totalResults: "",
+        Response: ""
+    }
 };
-export default (state = initialState, action: { type: string, toDo: ToDo, toDos: Array<ToDo> }) => {
+export default (state = initialState, action: { type: string, movie: Movie, movies: MovieList }) => {
     switch (action.type) {
-        case SET_TODO_ITEM:
-            const {toDo} = action;
-            return {...state, toDo};
-        case SET_TODOS:
-            const {toDos} = action;
-            return {...state, toDos};
+        case SET_MOVIE_ITEM:
+            const {movie} = action;
+            return {...state, movie};
+        case SET_MOVIES:
+            const {movies} = action;
+            return {...state, movies};
         default:
             return state;
     }

@@ -1,135 +1,52 @@
-import {call, put, select} from "redux-saga/effects";
-import {setToDoItemAction, setToDosAction, ToDo} from "./actions";
+import {call, put} from "redux-saga/effects";
 import axios from "axios";
+import {Movie, MovieList, setMovieItemAction, setMoviesAction} from "./actions";
 
-const apiUrl = "https://todo--express.herokuapp.com";
+const apiUrl = "https://omdbapi.com";
+const apiKey = "&apikey=47636b1";
 
-export function requestGetToDos() {
+export function requestGetMovies(searchTerm: string, page: number, year?: string, itemType?: string) {
+    let requestUrl: string = `${apiUrl}?s=${searchTerm}&page=${page}${apiKey}`;
+    if (year) {
+        requestUrl = requestUrl.concat(`&y=${year}`);
+    }
+    if (itemType) {
+        requestUrl = requestUrl.concat(`&type=${itemType}`);
+    }
     return axios.request({
         method: "get",
-        url: `${apiUrl}/todos`
+        url: requestUrl
     });
 }
 
-export function* handleGetToDos(action: { type: string }) {
+export function* handleGetMovies(action: { type: string, searchTerm: string, page: number, year?: string, itemType?: string }) {
     try {
-        const response: { data: Array<ToDo> } = yield call(requestGetToDos);
+        if (action.searchTerm?.length <= 3) {
+            yield put(setMoviesAction({Search: [], totalResults: "0", Response: ""}));
+            return;
+        }
+        const response: { data: MovieList } = yield call(requestGetMovies, action.searchTerm, action.page, action.year, action.itemType);
         const {data} = response;
-        yield put(setToDosAction(data));
+        yield put(setMoviesAction(data));
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
-export function requestGetToDo(id: number) {
+export function requestGetMovie(imdbID: string) {
+    console.log(imdbID);
     return axios.request({
         method: "get",
-        url: `${apiUrl}/todos/${id}`
+        url: `${apiUrl}?i=${imdbID}${apiKey}`
     });
 }
 
-export function* handleGetToDo(action: { type: string, id: number }) {
+export function* handleGetMovie(action: { type: string, imdbID: string }) {
     try {
-        const response: { data: ToDo } = yield call(requestGetToDo, action.id);
+        const response: { data: Movie } = yield call(requestGetMovie, action.imdbID);
         const {data} = response;
-        yield put(setToDoItemAction(data));
+        yield put(setMovieItemAction(data));
     } catch (error) {
-        console.log(error);
-    }
-}
-
-export function requestCreateToDo(toDo: ToDo) {
-    return axios.request({
-        method: "post",
-        url: `${apiUrl}/todos`,
-        data: toDo
-    });
-}
-
-export function* handleCreateToDo(action: { type: string, onSuccess?: () => void, onFailure?: (message: string) => void }) {
-    try {
-        // @ts-ignore
-        const state = yield select();
-        const toDo = state.toDoReducer.toDo;
-        const response: { data: ToDo } = yield call(requestCreateToDo, toDo);
-        const {data} = response;
-        yield put(setToDoItemAction(data));
-        if (action.onSuccess) {
-            action.onSuccess();
-        }
-    } catch (error) {
-        if (action.onFailure) {
-            action.onFailure("Todo item cannot be added.");
-        }
-    }
-}
-
-export function requestUpdateToDo(toDo: ToDo) {
-    return axios.request({
-        method: "put",
-        url: `${apiUrl}/todos/${toDo._id}`,
-        data: toDo,
-        headers: {
-            'Access-Control-Allow-Origin' : '*',
-            'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-        }
-    });
-
-}
-
-export function* handleUpdateToDo(action: { type: string, onSuccess?: () => void, onFailure?: (message: string) => void }) {
-    try {
-        // @ts-ignore
-        const state = yield select();
-        const toDo = state.toDoReducer.toDo;
-        const response: { data: ToDo } = yield call(requestUpdateToDo, toDo);
-        const {data} = response;
-        yield put(setToDoItemAction(data));
-        if (action.onSuccess) {
-            action.onSuccess();
-        }
-    } catch (error) {
-        if (action.onFailure) {
-            action.onFailure("Todo item cannot be updated.");
-        }
-    }
-}
-
-export function* handleCheckToDo(action: { type: string, id: number, onSuccess?: () => void, onFailure?: (message: string) => void }) {
-    try {
-        const item: { data: ToDo } = yield call(requestGetToDo, action.id);
-        const {data} = item;
-        data.completed = !data.completed;
-        const response: { data: ToDo } = yield call(requestUpdateToDo, data);
-        yield put(setToDoItemAction(data));
-        if (action.onSuccess) {
-            action.onSuccess();
-        }
-    } catch (error) {
-        if (action.onFailure) {
-            action.onFailure("Todo item cannot be checked.");
-        }
-    }
-}
-
-export function requestDeleteToDo(id: number) {
-    return axios.request({
-        method: "delete",
-        url: `${apiUrl}/todos/${id}`,
-    });
-}
-
-export function* handleDeleteToDo(action: { type: string, id: number ,onSuccess?: () => void, onFailure?: (message: string) => void }) {
-    try {
-        const response: { data: ToDo } = yield call(requestDeleteToDo, action.id);
-        const {data} = response;
-        yield put(setToDoItemAction(data));
-        if (action.onSuccess) {
-            action.onSuccess();
-        }
-    } catch (error) {
-        if (action.onFailure) {
-            action.onFailure("Todo item cannot be checked.");
-        }
+        console.error(error);
     }
 }

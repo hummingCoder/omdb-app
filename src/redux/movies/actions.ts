@@ -1,56 +1,79 @@
-import {
-    CHECK_TODO_ITEM,
-    CREATE_TODO_ITEM,
-    DELETE_TODO_ITEM,
-    GET_TODO_ITEM,
-    GET_TODOS,
-    SET_TODO_ITEM,
-    SET_TODOS,
-    UPDATE_TODO_ITEM
-} from "./constants";
+import {GET_MOVIE_ITEM, GET_MOVIES, GET_MOVIES_IMMEDIATE, SET_MOVIE_ITEM, SET_MOVIES,} from "./constants";
 
-export interface ToDo {
-    _id?: string;
-    title: string;
-    completed: boolean;
-    userId?: number;
+export interface Movie {
+    Title: string;
+    Year: string;
+    Rated: string;
+    Released: string;
+    Runtime: string;
+    Genre: string;
+    Director: string;
+    Writer: string;
+    Actors: string;
+    Plot: string;
+    Language: string;
+    Country: string;
+    Awards: string;
+    Poster: string;
+    Ratings: Rating[];
+    Metascore: string;
+    imdbRating: string;
+    imdbVotes: string;
+    imdbID: string;
+    Type: string;
+    DVD: string;
+    BoxOffice: string;
+    Production: string;
+    Website: string;
+    Response: string;
 }
 
-export const getToDosAction = () => ({
-    type: GET_TODOS,
-});
+export interface Rating {
+    Source: string;
+    Value: string;
+}
 
-export const setToDosAction = (toDos: Array<ToDo>) => ({
-    type: SET_TODOS,
-    toDos
+export interface MovieList {
+    Search?: MovieListItem[];
+    totalResults: string;
+    Response: string;
+}
+
+export interface MovieListItem {
+    Title?: string;
+    Year: string;
+    imdbID: string;
+    Type?: string;
+    Poster: string;
+}
+
+export const getMoviesAction = (searchTerm: string, page: number, year?: string, itemType?: string) => {
+    return {
+        type: GET_MOVIES,
+        searchTerm,
+        page,
+        year,
+        itemType
+    }
+};
+export const getMoviesImmediateAction = (searchTerm: string, page: number, year?: string, itemType?: string) => {
+    return {
+        type: GET_MOVIES_IMMEDIATE,
+        searchTerm,
+        page,
+        year,
+        itemType
+    }
+};
+export const setMoviesAction = (movies: MovieList) => ({
+    type: SET_MOVIES,
+    movies
 });
-export const getToDoItemAction = (id: number) => ({
-    type: GET_TODO_ITEM,
-    id
+export const getMovieItemAction = (imdbID: string) => ({
+    type: GET_MOVIE_ITEM,
+    imdbID
 });
-export const setToDoItemAction = (toDo: ToDo) => ({
-    type: SET_TODO_ITEM,
-    toDo
-});
-export const checkToDoItemAction = (id: string, onSuccess?: () => void, onFailure?: (message: string) => void) => ({
-    type: CHECK_TODO_ITEM,
-    id,
-    onSuccess,
-    onFailure
-});
-export const createToDoItemAction = (onSuccess?: () => void, onFailure?: (message: string) => void) => ({
-    type: CREATE_TODO_ITEM,
-    onSuccess,
-    onFailure
-});
-export const updateToDoItemAction = (onSuccess?: () => void, onFailure?: (message: string) => void) => ({
-    type: UPDATE_TODO_ITEM,
-    onSuccess,
-    onFailure
-});
-export const deleteToDoItemAction = (id: number,onSuccess?: () => void, onFailure?: (message: string) => void) => ({
-    type: DELETE_TODO_ITEM,
-    id,
-    onSuccess,
-    onFailure
+export const setMovieItemAction = (movie: Movie) => ({
+    type: SET_MOVIE_ITEM,
+    movie
 });

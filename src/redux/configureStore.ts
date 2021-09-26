@@ -1,10 +1,10 @@
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import createSagaMiddleware from "redux-saga";
-import todoReducer from "./todos/reducer";
+import movieReducer from "./movies/reducer";
 import {watcherSaga} from "./rootSaga";
 
 const reducer = combineReducers({
-    toDoReducer: todoReducer,
+    movieReducer: movieReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
