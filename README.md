@@ -36,4 +36,5 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 **BackEnd:** [OMDP API](http://www.omdbapi.com/)
 
-##Screenshots
+## Screenshots
+![image](https://user-images.githubusercontent.com/54854223/134819125-d701dffa-0fd7-4dfd-870e-3a352bcf3a0e.png)
